@@ -1,13 +1,4 @@
-# Sample Hardhat Project
+# Sample ERC20 project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
-
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+Creating my own cryptocurrency called "JCoin". 
+Using Openzeppelin's ERC20 contracts as a base. Link: https://docs.openzeppelin.com/contracts/4.x/erc20
