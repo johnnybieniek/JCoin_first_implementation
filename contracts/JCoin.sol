@@ -23,7 +23,10 @@ contract JCoin is ERC20, Ownable {
     }
 
     modifier SupplyNotReached() {
-        if (s_maxSupply - s_totalSupply < s_mintingLimit) {
+        uint256 currentSupply = getTotalSupply();
+        uint256 currentMax = getMaxSupply();
+        uint256 currentMintVal = getMintingLimit();
+        if (currentMax < (currentMintVal + currentSupply)) {
             revert JCoin__MaxSupplyReached();
         }
         _;
@@ -52,6 +55,11 @@ contract JCoin is ERC20, Ownable {
 
     function getMintingLimit() public view returns (uint256) {
         return (s_mintingLimit / (10**uint256(decimals())));
+    }
+
+    function getTotalSupply() public view returns (uint256) {
+        uint256 totalSupply = totalSupply();
+        return (totalSupply / (10**uint256(decimals())));
     }
 
     function CheckAccountForMint(address minter) public view returns (bool) {

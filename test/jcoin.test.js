@@ -68,5 +68,13 @@ const { developmentChains } = require("../helper-hardhat-config")
                       "JCoin__AlreadyMinted"
                   )
               })
+              it("Doesn't allow to mint if it would mean going beyond the max supply", async function () {
+                  await coin.setMaxSupply(12)
+                  coin = await coinContract.connect(user1)
+                  await expect(coin.mintCoins()).to.be.revertedWithCustomError(
+                      coinContract,
+                      "JCoin__MaxSupplyReached"
+                  )
+              })
           })
       })
