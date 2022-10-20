@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 error JCoin__AlreadyMinted();
 error JCoin__MaxSupplyReached();
+error JCoin__BadMath();
 
 contract JCoin is ERC20, Ownable {
     uint256 private s_totalSupply;
@@ -38,6 +39,10 @@ contract JCoin is ERC20, Ownable {
     }
 
     function setMaxSupply(uint256 newMaxSupply) public onlyOwner {
+        uint256 currentSupply = totalSupply();
+        if ((newMaxSupply * 10**uint256(decimals())) < currentSupply) {
+            revert JCoin__BadMath();
+        }
         s_maxSupply = newMaxSupply * 10**uint256(decimals());
     }
 
@@ -47,5 +52,9 @@ contract JCoin is ERC20, Ownable {
 
     function getMintingLimit() public view returns (uint256) {
         return (s_mintingLimit / (10**uint256(decimals())));
+    }
+
+    function CheckAccountForMint(address minter) public view returns (bool) {
+        return s_minters[minter];
     }
 }
