@@ -60,14 +60,23 @@ const { developmentChains } = require("../helper-hardhat-config")
                   assert.equal(userBalanceAfter.toString(), mintValue)
                   assert.equal(userInMinters, true)
               })
-              it("Reverts when user tries to mint coins again", async function () {
+              it("Updates the total amount that user minted in the mapping", async function () {
                   coin = await coinContract.connect(user1)
+                  const mappingBalanceBefore = await coin.getMintedPerWallet(user1.address)
+                  assert.equal(mappingBalanceBefore, 0)
                   await coin.mintCoins()
-                  await expect(coin.mintCoins()).to.be.revertedWithCustomError(
-                      coinContract,
-                      "JCoin__AlreadyMinted"
-                  )
+                  const mintingLimit = await coin.getMintingLimit()
+                  const mappingBalanceAfter = await coin.getMintedPerWallet(user1.address)
+                  assert.equal(mintingLimit.toString(), mappingBalanceAfter.toString())
               })
+              //   it("Reverts when user tries to mint coins again", async function () {
+              //       coin = await coinContract.connect(user1)
+              //       await coin.mintCoins()
+              //       await expect(coin.mintCoins()).to.be.revertedWithCustomError(
+              //           coinContract,
+              //           "JCoin__AlreadyMinted"
+              //       )
+              //   })
               it("Doesn't allow to mint if it would mean going beyond the max supply", async function () {
                   await coin.setMaxSupply(12)
                   coin = await coinContract.connect(user1)

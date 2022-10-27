@@ -4,7 +4,6 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-error JCoin__AlreadyMinted();
 error JCoin__MaxSupplyReached();
 error JCoin__BadMath();
 
@@ -14,13 +13,7 @@ contract JCoin is ERC20, Ownable {
     uint256 private s_mintingLimit = 5 * 10**uint256(decimals());
 
     mapping(address => bool) s_minters;
-
-    modifier firstTimeMinting(address minter) {
-        if (s_minters[minter]) {
-            revert JCoin__AlreadyMinted();
-        }
-        _;
-    }
+    mapping(address => uint256) s_mintedPerWallet;
 
     modifier SupplyNotReached() {
         uint256 currentSupply = getTotalSupply();
@@ -36,8 +29,10 @@ contract JCoin is ERC20, Ownable {
         _mint(msg.sender, initialSupply * 10**uint256(decimals()));
     }
 
-    function mintCoins() public firstTimeMinting(msg.sender) SupplyNotReached {
+    function mintCoins() public SupplyNotReached {
         s_minters[msg.sender] = true;
+        uint256 amount = getMintingLimit();
+        s_mintedPerWallet[msg.sender] += amount;
         _mint(msg.sender, s_mintingLimit);
     }
 
@@ -64,5 +59,9 @@ contract JCoin is ERC20, Ownable {
 
     function CheckAccountForMint(address minter) public view returns (bool) {
         return s_minters[minter];
+    }
+
+    function getMintedPerWallet(address minter) public view returns (uint256) {
+        return s_mintedPerWallet[minter];
     }
 }
