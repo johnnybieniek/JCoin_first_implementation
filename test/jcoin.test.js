@@ -47,6 +47,17 @@ const { developmentChains } = require("../helper-hardhat-config")
                   )
               })
           })
+          describe("setMintingLimit", function () {
+              it("sets a new limit successfully", async function () {
+                  const limitBefore = await coin.getMintingLimit()
+                  assert.equal(limitBefore, 5)
+                  const newLimit = 3
+                  await coin.setMintingLimit(newLimit)
+                  const limitAfter = await coin.getMintingLimit()
+                  assert.equal(newLimit.toString(), limitAfter.toString())
+              })
+          })
+
           describe("Mint coins", async function () {
               it("Allows first-time minter to successfuly receive coins", async function () {
                   coin = await coinContract.connect(user1)

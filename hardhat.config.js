@@ -12,6 +12,7 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL
 const MATIC_RPC_URL = process.env.MATIC_RPC_URL || ""
 const MATIC_ETHERSCAN_KEY = process.env.MATIC_ETHERSCAN_KEY || ""
+const MUMBAI_RPC_URL = process.env.MUMBAI_RPC_URL || ""
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -32,6 +33,12 @@ module.exports = {
             accounts: [PRIVATE_KEY],
             chainId: 137,
             gas: 20000000,
+            blockConfirmations: 6,
+        },
+        mumbai: {
+            url: MUMBAI_RPC_URL,
+            accounts: [PRIVATE_KEY],
+            chainId: 80001,
             blockConfirmations: 6,
         },
     },

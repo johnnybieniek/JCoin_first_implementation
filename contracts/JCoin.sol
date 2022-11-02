@@ -48,6 +48,10 @@ contract JCoin is ERC20, Ownable {
         return (s_maxSupply / (10**uint256(decimals())));
     }
 
+    function setMintingLimit(uint256 newLimit) public onlyOwner {
+        s_mintingLimit = newLimit * 10**uint256(decimals());
+    }
+
     function getMintingLimit() public view returns (uint256) {
         return (s_mintingLimit / (10**uint256(decimals())));
     }
